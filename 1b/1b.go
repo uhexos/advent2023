@@ -31,7 +31,7 @@ func main() {
 			if unicode.IsDigit(char) {
 				digit, _ := strconv.Atoi(string(char))
 				ints = append(ints, digit)
-			} else if char == 'o' && index+2 <= len(line)-1 {
+			} else if char == 'o' && index+3 <= len(line)-1 {
 				if line[index+1] == 'n' && line[index+2] == 'e' {
 					ints = append(ints, 1)
 				} else if line[index+1] == 'n' && line[index+2] == 'e' && line[index+3] == 'r' {
@@ -69,7 +69,7 @@ func main() {
 
 		tens := ints[0] * 10
 		units := ints[len(ints)-1]
-		fmt.Println(tens + units)
+		fmt.Println(tens+units)
 		totalSnow += tens + units
 	}
 
