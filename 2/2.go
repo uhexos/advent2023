@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -15,18 +16,30 @@ func main() {
 	}
 
 	scanner := bufio.NewScanner(file)
-	// totalRedCubes := 0
-	// totalBlueCubes := 0
-	// totalGreenCubes := 0
+	totalRedCubes := 12
+	totalBlueCubes := 14
+	totalGreenCubes := 13
+	total := 0
+	count := 1
+
 	for scanner.Scan() {
 		games := strings.Split(scanner.Text(), ":")
-		sets := strings.Split(games[1], ";")
-		for _, turn := range sets {
-			colors := strings.Split(turn,",")
-			fmt.Println(colors)
-			for _,color := range colors{
-				fmt.Println(color)
-			}
+		sets := strings.ReplaceAll(games[1], ";", ",")
+		colors := strings.Split(sets, ",")
+		// fmt.Println(colors)
+		shouldAdd := true
+		for _, cube := range colors {
+			split := strings.Split(cube, " ")
+			number, _ := strconv.Atoi(split[1])
+			color := split[2]
+
+			shouldAdd = shouldAdd && ((color == "red" && number <= totalRedCubes) || (color == "green" && number <= totalGreenCubes) || (color == "blue" && number <= totalBlueCubes))
+
 		}
+		if shouldAdd {
+			total += count
+		}
+		count += 1
 	}
+	fmt.Println(total)
 }
