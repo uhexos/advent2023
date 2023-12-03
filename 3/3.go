@@ -22,14 +22,25 @@ func getPossibleLocations(arr []string, x int, y int) [][]int {
 	return possible
 }
 
-func anyValid(arrayToSearch []string, locations [][]int) bool {
+func anyValid(arrayToSearch []string, locations [][]int) (bool, []int) {
 	invalids := "0123456789."
 	for _, coordinates := range locations {
 		if !strings.Contains(invalids, string(arrayToSearch[coordinates[0]][coordinates[1]])) {
-			return true
+			return true, []int{coordinates[0], coordinates[1]}
 		}
 	}
-	return false
+	return false, nil
+}
+
+func checkAndAdd(arr []string, allPossible [][]int, num string, total *int) []int {
+	a, symbolCoordinates := anyValid(arr, allPossible)
+	if a {
+		val, err := strconv.Atoi(num)
+		if err == nil {
+			*total += val
+		}
+	}
+	return symbolCoordinates
 }
 
 func main() {
@@ -40,7 +51,8 @@ func main() {
 	scanner := bufio.NewScanner(file)
 	var arr []string = []string{}
 	total := 0
-
+	gearRatio := 0
+	allValidSymbolLocations := make(map[string][]string)
 	for scanner.Scan() {
 		line := scanner.Text()
 		arr = append(arr, line)
@@ -52,36 +64,35 @@ func main() {
 			if unicode.IsDigit(value) {
 				num += string(value)
 				allPossible = append(allPossible, getPossibleLocations(arr, lineNumber, index)...)
-			} else  {
-				a := anyValid(arr, allPossible)
-				if a {
-					val, err := strconv.Atoi(num)
-					if err == nil {
-						total += val
-						fmt.Println(lineNumber, index, num)
-					}
+			} else {
+				symbolLocation := checkAndAdd(arr, allPossible, num, &total)
+				if symbolLocation != nil && arr[symbolLocation[0]][symbolLocation[1]] == '*' {
+					key := strconv.Itoa(symbolLocation[0])+","+strconv.Itoa(symbolLocation[1])
+					allValidSymbolLocations[key] = append(allValidSymbolLocations[key], num)
 				}
-				// println(num, a)
 				num = ""
 				allPossible = [][]int{}
 			}
 
 			if index == len(line)-1 {
-				a := anyValid(arr, allPossible)
-				if a {
-					val, err := strconv.Atoi(num)
-					if err == nil {
-						total += val
-						fmt.Println(lineNumber, index, num)
-					}
+				symbolLocation := checkAndAdd(arr, allPossible, num, &total)
+				if symbolLocation != nil && arr[symbolLocation[0]][symbolLocation[1]] == '*' {
+					key := strconv.Itoa(symbolLocation[0])+","+strconv.Itoa(symbolLocation[1])
+					allValidSymbolLocations[key] = append(allValidSymbolLocations[key], num)
 				}
-				// println(num, a)
 				num = ""
 				allPossible = [][]int{}
 			}
-			// println(allPossible)
-
 		}
 	}
-	fmt.Println(total)
+
+	for _, val := range allValidSymbolLocations {
+		if len(val) == 2 {
+			val1, _ := strconv.Atoi(val[0])
+			val2, _ := strconv.Atoi(val[1])
+
+			gearRatio += val1 * val2
+		}
+	}
+	fmt.Println(total, gearRatio)
 }
