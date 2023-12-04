@@ -3,9 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"math/rand"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -49,33 +47,28 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	// winnings := 0.0
 	scanner := bufio.NewScanner(file)
-	scratchCards := []string{}
+	scratchCards := make(map[int][]string)
 	lineNumber := 1
 	for scanner.Scan() {
-		key := strconv.Itoa(lineNumber)
-		scratchCards[key] = scanner.Text()
+		scratchCards[lineNumber] = append(scratchCards[lineNumber], scanner.Text())
 		lineNumber++
 	}
 
-	for key, line := range scratchCards {
-		numOfWins := getNumberOfWins(line)
+	for key,line:= range scratchCards{
+		numOfWins := getNumberOfWins(line[0])
+		
 		for i := 1; i <= numOfWins; i++ {
-	        randomNumber := rand.Intn(1000000)
-			unique := "," + strconv.Itoa(randomNumber)
-
-			currentKey := strings.Split(key, "")[0]
-			keyToDuplicate, _ := strconv.Atoi(currentKey)
-			keyToDuplicate += i
-			scratchCards[strconv.Itoa(keyToDuplicate)+unique] = scratchCards[strconv.Itoa(keyToDuplicate)]
+			scratchCards[key+i] = append(scratchCards[key+i], scratchCards[key+i][0])
 		}
-		// println(winningNumbers, elfsNumbers, math.Pow(2, float64(numeberOfWinnningsInLine-1.0)))
+		println(line[0],numOfWins)
 	}
-	total := 0
-	for _, v := range scratchCards {
-
-		total += len(v)
-
+	total:=0
+	for _,v:=range scratchCards{
+		for _,j:=range v{
+			total += len(j)
+		}
 	}
-	fmt.Println(total * len(scratchCards["2"]))
+	fmt.Println(total * len(scratchCards[2]))
 }
