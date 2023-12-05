@@ -49,26 +49,24 @@ func main() {
 	}
 	// winnings := 0.0
 	scanner := bufio.NewScanner(file)
-	scratchCards := make(map[int][]string)
-	lineNumber := 1
+	scratchCards := [][]string{}
 	for scanner.Scan() {
-		scratchCards[lineNumber] = append(scratchCards[lineNumber], scanner.Text())
-		lineNumber++
+		scratchCards = append(scratchCards, []string{scanner.Text()})
 	}
 
-	for key,line:= range scratchCards{
+	for key, line := range scratchCards {
 		numOfWins := getNumberOfWins(line[0])
-		
-		for i := 1; i <= numOfWins; i++ {
-			scratchCards[key+i] = append(scratchCards[key+i], scratchCards[key+i][0])
+		for j := 0; j < len(line); j++ {
+			for i := 1; i <= numOfWins; i++ {
+				scratchCards[key+i] = append(scratchCards[key+i], scratchCards[key+i][0])
+			}
 		}
-		println(line[0],numOfWins)
+
+		println(line[0], numOfWins)
 	}
-	total:=0
-	for _,v:=range scratchCards{
-		for _,j:=range v{
-			total += len(j)
-		}
+	total := 0
+	for _, v := range scratchCards {
+		total += len(v)
 	}
-	fmt.Println(total * len(scratchCards[2]))
+	fmt.Println(total)
 }
