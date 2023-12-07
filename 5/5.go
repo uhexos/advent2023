@@ -9,24 +9,15 @@ import (
 )
 
 func buildMap(source int, destination int, lenght int) []int {
-	maxInt := source + lenght
-	arr := make([]int, maxInt)
-	count := 0
-	for i := range arr {
-
-		if i < source {
-			arr[i] = i
-		} else {
-			arr[i] = destination + count
-			count++
-		}
+	maxInt := lenght
+	arr := []int{}
+	for i := 0; i <= maxInt; i++ {
+		arr = append(arr, destination + i)
 	}
 	return arr
 }
 func main() {
 	// seedToSoilMap := [][]int{}
-
-	a := buildMap(50, 52, 48)
 
 	m := make(map[string][][]int)
 
@@ -38,9 +29,8 @@ func main() {
 	m["light-to-temperature"] = [][]int{}
 	m["temperature-to-humidity"] = [][]int{}
 	m["humidity-to-location"] = [][]int{}
-	fmt.Println(a)
 
-	file, err := os.Open("input.txt")
+	file, err := os.Open("test.txt")
 	if err != nil {
 		panic(err)
 	}
