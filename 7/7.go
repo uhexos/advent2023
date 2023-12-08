@@ -91,11 +91,21 @@ func main() {
 	for bucketIndex := range handBuckets {
 		sort.Slice(handBuckets[bucketIndex], func(i, j int) bool {
 			cardsRanking := map[string]int{"A": 12, "K": 11, "Q": 10, "J": 9, "T": 8, "9": 7, "8": 6, "7": 5, "6": 4, "5": 3, "4": 2, "3": 1, "2": 0}
-			for k := 0; k < 5; k++ {
-				if cardsRanking[string(handBuckets[bucketIndex][i].cards[k])] > cardsRanking[string(handBuckets[bucketIndex][j].cards[k])] {
-					return true
-				}
-			}
+			if cardsRanking[string(handBuckets[bucketIndex][i].cards[0])] < cardsRanking[string(handBuckets[bucketIndex][j].cards[0])] {
+				return true
+			} else if cardsRanking[string(handBuckets[bucketIndex][i].cards[1])] < cardsRanking[string(handBuckets[bucketIndex][j].cards[1])] {
+				return true
+
+			} else if cardsRanking[string(handBuckets[bucketIndex][i].cards[2])] < cardsRanking[string(handBuckets[bucketIndex][j].cards[2])] {
+				return true
+
+			} else if cardsRanking[string(handBuckets[bucketIndex][i].cards[3])] < cardsRanking[string(handBuckets[bucketIndex][j].cards[3])] {
+				return true
+
+			} else if cardsRanking[string(handBuckets[bucketIndex][i].cards[4])] < cardsRanking[string(handBuckets[bucketIndex][j].cards[4])] {
+				return true
+
+			} 
 			return false
 		})
 	}
